@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Assistant</h1>
+
+        <!-- Flexbox layout for the input area and response area -->
+        <div class="flex-container">
+            <!-- Input Area -->
+            <div class="input-area">
+                <input type="text" id="question" placeholder="Ask me anything..." autofocus>
+                <button onclick="askQuestion()">Ask</button>
+            </div>
+
+            <!-- Response Area (Flex) -->
+            <div id="response-container" class="response-container">
+                <div id="response"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function askQuestion() {
+            const question = document.getElementById("question").value;
+            const responseElement = document.getElementById("response");
+            
+            if (question.trim() === "") {
+                responseElement.innerHTML = "Please ask a valid question.";
+                return;
+            }
+
+            const response = await fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question })
+            });
+
+            const data = await response.json();
+            responseElement.innerHTML = `<p>${data.response}</p>`;
+        }
+    </script>
+</body>
+</html>
